@@ -1,0 +1,805 @@
+/* ==============================================================================
+   LUCI-THEME-MATERIAL COMPREHENSIVE HARMONIZED DESIGN SYSTEM
+   Mathematical WCAG AA/AAA Contrast Tokens for Light & Dark Modes
+   ============================================================================== */
+
+/* --- ROOT TOKENS (LIGHT MODE) --- */
+:root {
+	--font-body: "Microsoft Yahei", "WenQuanYi Micro Hei", "sans-serif", "Helvetica Neue", "Helvetica", "Hiragino Sans GB";
+
+	--page-bg: #f8fafc;
+	--card-bg: #ffffff;
+	--card-border: #e2e8f0;
+	--card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+
+	--text-primary: #0f172a;
+	--text-secondary: #475569;
+	--text-muted: #64748b;
+	--text-inverse: #ffffff;
+
+	--sidebar-bg: #ffffff;
+	--sidebar-border: #e2e8f0;
+	--sidebar-header-color: #1e293b;
+	--sidebar-sub-bg: #f8fafc;
+	--sidebar-item-color: #475569;
+	--sidebar-hover-bg: #f1f5f9;
+	--sidebar-hover-color: #0f172a;
+
+	--table-header-bg: #f1f5f9;
+	--table-header-color: #334155;
+	--table-row-bg: #ffffff;
+	--table-row-alt-bg: #f8fafc;
+	--table-row-hover: #f1f5f9;
+	--table-border: #e2e8f0;
+
+	--input-bg: #ffffff;
+	--input-border: #cbd5e1;
+	--input-text: #0f172a;
+
+	--progress-bg: #e2e8f0;
+	--progress-fill: var(--main-color, #0e7490);
+
+	--banner-warn-bg: #fffbeb;
+	--banner-warn-border: #fde68a;
+	--banner-warn-text: #1e293b;
+	--banner-warn-title: #92400e;
+	--banner-warn-btn: var(--main-color, #0e7490);
+
+	--main-color: #0e7490;
+	--secondary-color: #38bdf8;
+	--header-bg: #0e7490;
+	--header-color: #ffffff;
+	--bar-bg: #38bdf8;
+	--white-color: #ffffff;
+	--black-color: #000000;
+	--submenu-bg-hover: #f1f5f9;
+	--submenu-bg-hover-active: #0e7490;
+}
+
+/* --- DARK MODE TOKENS --- */
+html.material-dark-mode {
+	--page-bg: #0a0e17;
+	--card-bg: #131b2e;
+	--card-border: #1e293b;
+	--card-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.5);
+
+	--text-primary: #f8fafc;
+	--text-secondary: #cbd5e1;
+	--text-muted: #94a3b8;
+	--text-inverse: #ffffff;
+
+	--sidebar-bg: #0f172a;
+	--sidebar-border: #1e293b;
+	--sidebar-header-color: #f8fafc;
+	--sidebar-sub-bg: #090d16;
+	--sidebar-item-color: #94a3b8;
+	--sidebar-hover-bg: #1e293b;
+	--sidebar-hover-color: #ffffff;
+
+	--table-header-bg: #182238;
+	--table-header-color: #cbd5e1;
+	--table-row-bg: #131b2e;
+	--table-row-alt-bg: #0e1526;
+	--table-row-hover: #1e293b;
+	--table-border: #1e293b;
+
+	--input-bg: #162036;
+	--input-border: #2c3b59;
+	--input-text: #f8fafc;
+
+	--progress-bg: #1e293b;
+	--progress-fill: var(--main-color, #0e7490);
+
+	--banner-warn-bg: rgba(245, 158, 11, 0.12);
+	--banner-warn-border: rgba(245, 158, 11, 0.35);
+	--banner-warn-text: #f1f5f9;
+	--banner-warn-title: #fde68a;
+	--banner-warn-btn: var(--main-color, #0e7490);
+
+	--submenu-bg-hover: #1e293b;
+	--submenu-bg-hover-active: var(--main-color, #0e7490);
+}
+
+/* ==============================================================================
+   TYPOGRAPHY (ORIGINAL MATERIAL FONT)
+   ============================================================================== */
+html, body {
+	font-family: "Microsoft Yahei", "WenQuanYi Micro Hei", "sans-serif", "Helvetica Neue", "Helvetica", "Hiragino Sans GB";
+	font-family: var(--font-body);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* ==============================================================================
+   GLOBAL LAYOUT & BACKGROUND
+   ============================================================================== */
+html, body {
+	background-color: var(--page-bg) !important;
+	color: var(--text-primary);
+	min-height: 100vh;
+}
+
+header {
+	color: var(--header-color);
+	background: var(--header-bg);
+}
+
+header > .fill > .container {
+	position: relative !important;
+	height: 100% !important;
+	min-height: 0 !important;
+}
+
+.main, .main-right, .main-right > #maincontent, #maincontent {
+	background-color: var(--page-bg) !important;
+	min-height: calc(100vh - 4rem) !important;
+}
+
+.main > .loading {
+	background-color: var(--page-bg) !important;
+}
+
+.modemenu-buttons {
+	background: var(--header-bg) !important;
+}
+
+/* ==============================================================================
+   SIDEBAR (LIGHT & DARK FULL FIX)
+   ============================================================================== */
+.main-left {
+	background-color: var(--sidebar-bg) !important;
+	border-right: 1px solid var(--sidebar-border) !important;
+}
+
+.main > .main-left > .nav {
+	background: transparent !important;
+}
+
+.main > .main-left > .nav > li {
+	background: transparent !important;
+}
+
+.main > .main-left > .nav > .slide > .menu,
+.main > .main-left > .nav > li > [data-title],
+.main > .main-left > .nav > li > a {
+	color: var(--sidebar-header-color) !important;
+	font-weight: 500 !important;
+	background: transparent !important;
+}
+
+.main > .main-left > .nav > li:hover,
+.main > .main-left > .nav > .slide > .menu:hover {
+	background: var(--sidebar-hover-bg) !important;
+	color: var(--sidebar-hover-color) !important;
+}
+
+.main > .main-left > .nav > .slide > .slide-menu {
+	background-color: var(--sidebar-sub-bg) !important;
+}
+
+.main > .main-left > .nav > .slide > .slide-menu > li {
+	background: transparent !important;
+}
+
+.main > .main-left > .nav > .slide > .slide-menu > li > a {
+	color: var(--sidebar-item-color) !important;
+	background: transparent !important;
+}
+
+/* Fix white hover rectangle completely */
+.main > .main-left > .nav > .slide > .slide-menu > li:hover,
+.main > .main-left > .nav > .slide > .slide-menu > li:hover > a {
+	background-color: var(--sidebar-hover-bg) !important;
+	color: var(--sidebar-hover-color) !important;
+}
+
+/* Active submenu item */
+.main > .main-left > .nav > .slide > .slide-menu > .active,
+.main > .main-left > .nav > .slide > .slide-menu > li.active,
+.main > .main-left > .nav > .slide > .slide-menu > .active > a,
+.main > .main-left > .nav > .slide > .slide-menu > li.active > a {
+	background-color: var(--main-color) !important;
+	color: #ffffff !important;
+	border-radius: 0 !important;
+}
+
+/* Logout item */
+.main > .main-left > .nav > li:last-child {
+	color: var(--sidebar-header-color) !important;
+}
+.main > .main-left > .nav > li:last-child a {
+	color: var(--sidebar-header-color) !important;
+}
+
+/* --- REFINED HARMONIOUS DARK MODE SIDEBAR --- */
+html.material-dark-mode .main-left {
+	background-color: var(--sidebar-bg, #0c111d) !important;
+	border-right: 1px solid var(--sidebar-border, rgba(255, 255, 255, 0.08)) !important;
+}
+
+html.material-dark-mode .main > .main-left > .nav > .slide > .menu,
+html.material-dark-mode .main > .main-left > .nav > li > [data-title] {
+	color: #94a3b8 !important;
+	font-weight: 600 !important;
+	font-size: 0.82rem !important;
+	text-transform: uppercase !important;
+	letter-spacing: 0.05em !important;
+	padding: 0.75rem 1.25rem 0.35rem 1.25rem !important;
+	transition: color 0.15s ease !important;
+}
+
+html.material-dark-mode .main > .main-left > .nav > .slide > .menu:hover,
+html.material-dark-mode .main > .main-left > .nav > li:hover {
+	background: rgba(255, 255, 255, 0.04) !important;
+	color: #f8fafc !important;
+}
+
+html.material-dark-mode .main > .main-left > .nav > .slide > .slide-menu {
+	background-color: transparent !important;
+	padding: 2px 0 6px 0 !important;
+}
+
+html.material-dark-mode .main > .main-left > .nav > .slide > .slide-menu > li > a {
+	color: #cbd5e1 !important;
+	font-size: 0.88rem !important;
+	font-weight: 400 !important;
+	padding: 0.45rem 1.25rem 0.45rem 2rem !important;
+	transition: all 0.15s ease !important;
+}
+
+html.material-dark-mode .main > .main-left > .nav > .slide > .slide-menu > li:hover,
+html.material-dark-mode .main > .main-left > .nav > .slide > .slide-menu > li:hover > a {
+	background-color: rgba(255, 255, 255, 0.06) !important;
+	color: #ffffff !important;
+	border-radius: 0 !important;
+}
+
+html.material-dark-mode .main > .main-left > .nav > .slide > .slide-menu > .active,
+html.material-dark-mode .main > .main-left > .nav > .slide > .slide-menu > li.active,
+html.material-dark-mode .main > .main-left > .nav > .slide > .slide-menu > .active > a,
+html.material-dark-mode .main > .main-left > .nav > .slide > .slide-menu > li.active > a {
+	background-color: var(--main-color) !important;
+	color: #ffffff !important;
+	font-weight: 600 !important;
+	border-radius: 6px !important;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35) !important;
+}
+
+html.material-dark-mode .main > .main-left > .nav > li:last-child {
+	color: #94a3b8 !important;
+	border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+	padding-top: 0.75rem !important;
+	margin-top: 1.5rem !important;
+}
+
+html.material-dark-mode .main > .main-left > .nav > li:last-child a {
+	color: #94a3b8 !important;
+	transition: color 0.15s ease !important;
+}
+
+html.material-dark-mode .main > .main-left > .nav > li:last-child:hover a {
+	color: #f87171 !important;
+}
+
+/* ==============================================================================
+   CARDS, CBI SECTIONS & CONTAINERS
+   ============================================================================== */
+.cbi-section,
+.cbi-map,
+.cbi-section-node,
+[data-tab-title],
+[data-page="admin-system-package-manager"] #maincontent > .container,
+body[data-page="admin-system-package-manager"] #maincontent > .container,
+body.node-system-package-manager #maincontent > .container,
+#cbi-wireless > .cbi-section-node,
+#cbi-network > .cbi-section-node,
+#iptables,
+.Firewall form {
+	background-color: var(--card-bg) !important;
+	border: 1px solid var(--card-border) !important;
+	border-radius: 10px !important;
+	box-shadow: var(--card-shadow) !important;
+	color: var(--text-primary) !important;
+}
+
+[data-page="admin-system-package-manager"] #maincontent > .container h2,
+body[data-page="admin-system-package-manager"] #maincontent > .container h2 {
+	color: var(--text-primary) !important;
+	border-bottom: 2px solid var(--card-border) !important;
+	margin-top: 0 !important;
+	padding-bottom: 0.5rem !important;
+}
+
+[data-page="admin-system-package-manager"] #maincontent > .container p,
+body[data-page="admin-system-package-manager"] #maincontent > .container p,
+[data-page="admin-system-package-manager"] #maincontent > .container label,
+body[data-page="admin-system-package-manager"] #maincontent > .container label {
+	color: var(--text-secondary);
+}
+
+h2, .cbi-map > h2 {
+	color: var(--text-primary) !important;
+	border-bottom: 2px solid var(--card-border) !important;
+}
+
+.cbi-section > h3:first-child,
+.panel-title {
+	color: var(--text-secondary) !important;
+	border-bottom: 1px solid var(--card-border) !important;
+	font-weight: 600 !important;
+}
+
+.cbi-value-title {
+	color: var(--text-secondary) !important;
+}
+
+.cbi-value-field,
+.cbi-value-description {
+	color: var(--text-muted) !important;
+}
+
+/* ==============================================================================
+   TABLES & ZEBRA STRIPING
+   ============================================================================== */
+table, .table {
+	background-color: var(--card-bg) !important;
+	border-color: var(--table-border) !important;
+	color: var(--text-primary) !important;
+}
+
+table th, .table .th,
+table > thead > tr > th,
+.table > .tr.table-titles > .th {
+	background-color: var(--table-header-bg) !important;
+	color: var(--table-header-color) !important;
+	border-bottom: 2px solid var(--table-border) !important;
+	font-weight: 600 !important;
+}
+
+table td, .table .td,
+table tr, .table .tr {
+	background-color: var(--table-row-bg) !important;
+	color: var(--text-primary) !important;
+	border-color: var(--table-border) !important;
+}
+
+table tr:nth-child(even) td,
+table tr:nth-child(even),
+.table .tr:nth-child(2n),
+.table .tr:nth-child(2n) .td {
+	background-color: var(--table-row-alt-bg) !important;
+}
+
+table tr:hover td,
+.table .tr:hover .td {
+	background-color: var(--table-row-hover) !important;
+}
+
+/* ==============================================================================
+   PROGRESS BARS
+   ============================================================================== */
+.cbi-progressbar,
+div[style*="background-color: #eee"][style*="border"],
+div[style*="background-color: #f0f0f0"] {
+	background-color: var(--progress-bg) !important;
+	border: 1px solid var(--card-border) !important;
+	border-radius: 9999px !important;
+	overflow: hidden !important;
+}
+
+.cbi-progressbar > div,
+div[style*="background-color: #eee"] > div,
+div[style*="background-color: #f0f0f0"] > div {
+	background-color: var(--progress-fill) !important;
+	color: #ffffff !important;
+}
+
+/* ==============================================================================
+   TABS (.tabs & CBI TABMENU)
+   ============================================================================== */
+.tabs {
+	background-color: transparent !important;
+	border-bottom: 2px solid var(--card-border) !important;
+}
+
+.tabs > li > a {
+	color: var(--text-muted) !important;
+	font-weight: 500 !important;
+}
+
+.tabs > li:hover > a {
+	color: var(--text-primary) !important;
+}
+
+.tabs > li.active > a,
+.tabs > li[class~="active"] > a {
+	color: var(--main-color) !important;
+	font-weight: 700 !important;
+}
+
+.tabs > li.active,
+.tabs > li[class~="active"] {
+	border-bottom: 2.5px solid var(--main-color) !important;
+}
+
+/* ==============================================================================
+   FORM CONTROLS & BUTTONS
+   ============================================================================== */
+input[type="text"],
+input[type="password"],
+input[type="number"],
+select,
+textarea,
+.cbi-input-text,
+.cbi-input-select {
+	background-color: var(--input-bg) !important;
+	border: 1px solid var(--input-border) !important;
+	color: var(--input-text) !important;
+	border-radius: 6px !important;
+	padding: 8px 12px !important;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+select:focus,
+textarea:focus {
+	border-color: var(--main-color) !important;
+	outline: none !important;
+	box-shadow: 0 0 0 3px rgba(14, 116, 144, 0.25) !important;
+}
+
+.btn, .cbi-button {
+	border-radius: 6px !important;
+	font-weight: 600 !important;
+	padding: 8px 16px !important;
+	transition: all 0.2s ease !important;
+}
+
+.btn-primary, .cbi-button-apply, .cbi-button-action {
+	background-color: var(--main-color) !important;
+	color: #ffffff !important;
+	border: none !important;
+}
+
+.btn-reset, .cbi-button-reset {
+	background-color: var(--input-bg) !important;
+	border: 1px solid var(--input-border) !important;
+	color: var(--text-secondary) !important;
+}
+
+/* ==============================================================================
+   WARNING / ALERT BANNER
+   ============================================================================== */
+.alert-message.warning,
+.alert.warning {
+	background-color: var(--banner-warn-bg) !important;
+	border: 1px solid var(--banner-warn-border) !important;
+	color: var(--banner-warn-text) !important;
+	border-radius: 8px !important;
+	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04) !important;
+	text-shadow: none !important;
+	padding: 14px 18px !important;
+}
+
+.alert-message.warning > h4,
+.alert.warning > h4 {
+	color: var(--banner-warn-title) !important;
+	margin-top: 0 !important;
+	margin-bottom: 6px !important;
+	font-weight: 700 !important;
+	font-size: 15px !important;
+}
+
+.alert-message.warning p,
+.alert.warning p {
+	color: var(--banner-warn-text) !important;
+	font-weight: 600 !important;
+	font-size: 13.5px !important;
+	line-height: 1.5 !important;
+	margin: 0 !important;
+}
+
+.alert-message.warning .btn,
+.alert.warning .btn {
+	background-color: var(--banner-warn-btn) !important;
+	color: #ffffff !important;
+	border-radius: 6px !important;
+	border: none !important;
+	font-weight: 600 !important;
+	padding: 6px 14px !important;
+	box-shadow: none !important;
+}
+
+/* ==============================================================================
+   LOGIN PAGE (ORIGINAL LAYOUT - ONLY COLOR THEMING)
+   ============================================================================== */
+body.node-main-login,
+body.node-main-login .main,
+body.node-main-login .main-right,
+body.node-main-login #maincontent {
+	background-color: var(--page-bg) !important;
+}
+
+html.material-dark-mode body.node-main-login .main .container {
+	background-color: var(--card-bg) !important;
+	border: 1px solid var(--card-border) !important;
+	color: var(--text-primary) !important;
+	box-shadow: var(--card-shadow) !important;
+}
+
+html.material-dark-mode body.node-main-login h2 {
+	color: var(--text-primary) !important;
+	border-bottom: 1px solid var(--card-border) !important;
+}
+
+html.material-dark-mode body.node-main-login .cbi-map-descr {
+	color: var(--text-muted) !important;
+}
+
+html.material-dark-mode body.node-main-login .cbi-value-title {
+	color: var(--text-secondary) !important;
+}
+
+/* ==============================================================================
+   MODAL DIALOGS & POPUPS (SESSION EXPIRED, CONFIRMATIONS)
+   ============================================================================== */
+#modal_overlay {
+	background: rgba(0, 0, 0, 0.6) !important;
+}
+
+.modal,
+.cbi-modal {
+	background-color: var(--card-bg) !important;
+	border: 1px solid var(--card-border) !important;
+	border-radius: 12px !important;
+	box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.45) !important;
+	color: var(--text-primary) !important;
+	padding: 1.8rem !important;
+}
+
+.modal > h2,
+.modal > h3,
+.modal > h4,
+.modal > h5 {
+	color: var(--text-primary) !important;
+	font-weight: 700 !important;
+	margin-top: 0 !important;
+	margin-bottom: 0.8rem !important;
+}
+
+.modal > p,
+.modal p {
+	color: var(--text-secondary) !important;
+}
+
+.modal > pre,
+.modal > textarea {
+	background-color: var(--input-bg) !important;
+	color: var(--input-text) !important;
+	border: 1px solid var(--card-border) !important;
+	border-radius: 0 !important;
+}
+
+.modal .button-row,
+.modal div[class="btn"],
+.modal .cbi-page-actions {
+	margin-top: 1.2rem !important;
+}
+
+.modal .btn,
+.modal .cbi-button {
+	border-radius: 6px !important;
+	font-weight: 600 !important;
+}
+
+/* Modal Dark Mode Enforcement */
+html.material-dark-mode #modal_overlay {
+	background: rgba(0, 0, 0, 0.8) !important;
+}
+
+html.material-dark-mode .modal,
+html.material-dark-mode .cbi-modal {
+	background-color: var(--card-bg, #131b2e) !important;
+	border: 1px solid var(--card-border, #1e293b) !important;
+	color: #f8fafc !important;
+	box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75) !important;
+}
+
+html.material-dark-mode .modal > h2,
+html.material-dark-mode .modal > h3,
+html.material-dark-mode .modal > h4,
+html.material-dark-mode .modal > h5 {
+	color: #f8fafc !important;
+}
+
+/* ==============================================================================
+   HEADER BRANDING (HIDE TEXT, PRESERVE LOGO)
+   ============================================================================== */
+header > .fill > .container > .brand,
+header .brand {
+	display: none !important;
+}
+
+@media screen and (max-width: 1152px) {
+	header > .fill > .container > #logo,
+	header #logo {
+		display: none !important;
+	}
+}
+
+/* ==============================================================================
+   DARK MODE COMPONENT FIXES (IFACE BADGES, STATUS CARDS, TOOLTIPS, NFTABLES)
+   ============================================================================== */
+html.material-dark-mode .ifacebadge,
+html.material-dark-mode td > .ifacebadge,
+html.material-dark-mode .td > .ifacebadge,
+html.material-dark-mode .network-status-table .ifacebox-body .ifacebadge,
+html.material-dark-mode .zonebadge .ifacebadge,
+html.material-dark-mode .cbi-value-field > ul > li .ifacebadge {
+	background-color: var(--card-border, #1e293b) !important;
+	border: 1px solid var(--input-border, #334155) !important;
+	color: #f8fafc !important;
+	border-radius: 6px !important;
+	box-shadow: none !important;
+}
+
+html.material-dark-mode .ifacebadge * {
+	color: #f8fafc !important;
+}
+
+html.material-dark-mode .ifacebadge a,
+html.material-dark-mode .ifacebadge a * {
+	color: var(--secondary-color, #38bdf8) !important;
+}
+
+html.material-dark-mode .ifacebox {
+	background-color: var(--input-bg, #162036) !important;
+	border: 1px solid var(--card-border, #1e293b) !important;
+	border-radius: 8px !important;
+}
+
+html.material-dark-mode .ifacebox-head {
+	background-color: var(--card-border, #1e293b) !important;
+	color: #f8fafc !important;
+	border: 1px solid var(--input-border, #334155) !important;
+	border-radius: 0 !important;
+}
+
+html.material-dark-mode .ifacebox-body {
+	background-color: var(--card-bg, #131b2e) !important;
+	color: #cbd5e1 !important;
+}
+
+html.material-dark-mode .cbi-tooltip {
+	background-color: var(--sidebar-bg, #0f172a) !important;
+	color: #f8fafc !important;
+	border: 1px solid var(--input-border, #334155) !important;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+html.material-dark-mode .zonebadge {
+	color: #f8fafc !important;
+}
+
+html.material-dark-mode .zonebadge-empty {
+	background: repeating-linear-gradient(45deg, rgba(30, 41, 59, .7), rgba(30, 41, 59, .7) 5px, rgba(15, 23, 42, .7) 5px, rgba(15, 23, 42, .7) 10px) !important;
+	color: #94a3b8 !important;
+}
+
+/* Light Mode Badges Enforcement */
+.ifacebadge,
+td > .ifacebadge,
+.td > .ifacebadge {
+	color: #0f172a;
+}
+
+/* CBI Tabmenu in Dark Mode */
+html.material-dark-mode .cbi-tabmenu {
+	background-color: var(--sidebar-bg, #0f172a) !important;
+	border: 1px solid var(--card-border, #1e293b) !important;
+	border-bottom: 0 !important;
+}
+
+html.material-dark-mode .cbi-tabmenu > li > a {
+	color: #94a3b8 !important;
+}
+
+html.material-dark-mode .cbi-tabmenu > li:hover {
+	background-color: var(--card-border, #1e293b) !important;
+}
+
+html.material-dark-mode .cbi-tabmenu > li[class~="cbi-tab"] {
+	background-color: var(--card-bg, #131b2e) !important;
+	border-top: 2px solid var(--main-color, #0e7490) !important;
+}
+
+html.material-dark-mode .cbi-tabmenu > li[class~="cbi-tab"] > a {
+	color: #f8fafc !important;
+	font-weight: 600 !important;
+}
+
+/* ==============================================================================
+   MOBILE SIDEBAR DRAWER - 60FPS HARDWARE-ACCELERATED SMOOTH SLIDE ANIMATION
+   Eliminates jank/stutter (patah-patah) when opening and closing on mobile
+   ============================================================================== */
+@media screen and (max-width: 1152px) {
+	/* Hamburger menu touch responsiveness */
+	.showSide {
+		touch-action: manipulation;
+		-webkit-tap-highlight-color: transparent;
+		margin-right: 0.15rem !important;
+		top: 0 !important;
+	}
+
+	/* Base Mobile Drawer - Offscreen GPU transform */
+	.main-left {
+		position: fixed !important;
+		top: 3.75rem !important;
+		left: 0 !important;
+		bottom: 0 !important;
+		width: 16rem !important;
+		max-width: 82vw !important;
+		min-width: 0 !important;
+		height: calc(100% - 3.75rem) !important;
+		z-index: 1600 !important;
+		overflow-y: auto !important;
+		overflow-x: hidden !important;
+		-webkit-overflow-scrolling: touch !important;
+		background-color: var(--sidebar-bg, #ffffff) !important;
+		border-right: 1px solid var(--sidebar-border, #e2e8f0) !important;
+		box-shadow: 4px 0 25px rgba(0, 0, 0, 0.16) !important;
+
+		/* Smooth GPU-accelerated transition (avoids layout reflow) */
+		transform: translate3d(-105%, 0, 0) !important;
+		visibility: hidden !important;
+		will-change: transform, visibility;
+		transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1), visibility 0.28s cubic-bezier(0.32, 0.72, 0, 1) !important;
+	}
+
+	html.material-dark-mode .main-left {
+		background-color: var(--sidebar-bg, #0f172a) !important;
+		border-right: 1px solid var(--sidebar-border, #1e293b) !important;
+		box-shadow: 4px 0 25px rgba(0, 0, 0, 0.5) !important;
+	}
+
+	/* Active / Opened State: slide in cleanly */
+	.main-left.open,
+	.main-left[style*="visibility: visible"] {
+		transform: translate3d(0, 0, 0) !important;
+		visibility: visible !important;
+	}
+
+	/* Dark backdrop mask with smooth fade */
+	.darkMask {
+		position: fixed !important;
+		top: 0 !important;
+		left: 0 !important;
+		right: 0 !important;
+		bottom: 0 !important;
+		width: 100vw !important;
+		height: 100vh !important;
+		z-index: 1500 !important;
+		background-color: rgba(0, 0, 0, 0.45) !important;
+		backdrop-filter: blur(2px) !important;
+		-webkit-backdrop-filter: blur(2px) !important;
+		opacity: 0 !important;
+		visibility: hidden !important;
+		pointer-events: none !important;
+		touch-action: manipulation !important;
+		will-change: opacity, visibility;
+		transition: opacity 0.28s cubic-bezier(0.32, 0.72, 0, 1), visibility 0.28s cubic-bezier(0.32, 0.72, 0, 1) !important;
+	}
+
+	.darkMask.open,
+	.darkMask[style*="visibility: visible"],
+	.darkMask[style*="opacity: 1"] {
+		opacity: 1 !important;
+		visibility: visible !important;
+		pointer-events: auto !important;
+	}
+}
+
+
+
+
+

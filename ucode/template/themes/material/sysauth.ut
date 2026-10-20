@@ -1,0 +1,646 @@
+{#
+ Copyright 2026 Antigravity AI for LuCI Material Theme
+-#}
+{%
+	import { readfile } from 'fs';
+	const boardinfo = ubus.call('system', 'board');
+	const hostname = striptags(boardinfo?.hostname ?? 'OpenWrt');
+	const server_theme_cfg = readfile('/etc/config/luci_theme_customizer.json');
+	let cfg_json = null;
+	try {
+		if (server_theme_cfg) cfg_json = json(server_theme_cfg);
+	} catch(e) {}
+	
+	let primary_color = cfg_json?.settings?.primary ?? '#0e7490';
+	let secondary_color = cfg_json?.settings?.secondary ?? '#38bdf8';
+	let theme_mode = cfg_json?.settings?.mode ?? 'light';
+	http.prepare_content('text/html; charset=UTF-8');
+
+	let https_ports = uci.get('uhttpd', 'main', 'listen_https') ?? [];
+	https_ports = uniq(filter(
+		map(
+			(type(https_ports) == 'string') ? split(https_ports, /\s+/) : https_ports,
+			e => +match(e, /\d+$/)?.[0]
+		),
+		p => (p >= 0 && p <= 65535)
+	));
+-%}
+<!DOCTYPE html>
+<html lang="{{ dispatcher.lang }}" class="{{ (theme_mode == 'dark') ? 'material-dark-mode' : '' }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="theme-color" content="{{ primary_color }}">
+<title>{{ hostname }} - {{ _('Authorization Required') }} - LuCI</title>
+<link rel="icon" href="{{ media }}/logo_48.png" sizes="48x48">
+<link rel="icon" href="{{ media }}/logo.svg" sizes="any">
+<script>
+window.ROUTER_THEME_CONFIG = {% print(server_theme_cfg ? server_theme_cfg : 'null'); %};
+</script>
+<script src="{{ media }}/theme-customizer.js?v=26.300.45"></script>
+<style>
+	:root {
+		--theme-primary: {{ primary_color }};
+		--theme-secondary: {{ secondary_color }};
+		--font-body: "Microsoft Yahei", "WenQuanYi Micro Hei", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+		
+		/* Light Mode Palette */
+		--page-bg: #f1f5f9;
+		--card-bg: #ffffff;
+		--card-border: #e2e8f0;
+		--card-shadow: 0 16px 40px rgba(14, 116, 144, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+		--text-primary: #0f172a;
+		--text-secondary: #64748b;
+		--input-bg: #f8fafc;
+		--input-border: #cbd5e1;
+		--input-text: #0f172a;
+		--input-icon: #64748b;
+		--btn-reset-bg: #f1f5f9;
+		--btn-reset-border: #e2e8f0;
+		--btn-reset-text: #475569;
+		--card-footer-bg: #f8fafc;
+		--card-footer-border: #f1f5f9;
+		--badge-bg: rgba(14, 116, 144, 0.1);
+		--badge-border: rgba(14, 116, 144, 0.25);
+		--badge-color: var(--theme-primary, #0e7490);
+	}
+
+	/* Dark Mode Palette (adapted to theme) */
+	html.material-dark-mode,
+	body.material-dark-mode {
+		--page-bg: #090e17;
+		--card-bg: #121826;
+		--card-border: rgba(255, 255, 255, 0.08);
+		--card-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), 0 0 1px rgba(255, 255, 255, 0.15);
+		--text-primary: #ffffff;
+		--text-secondary: #94a3b8;
+		--input-bg: #0d1322;
+		--input-border: #1e283d;
+		--input-text: #ffffff;
+		--input-icon: #64748b;
+		--btn-reset-bg: #1e293b;
+		--btn-reset-border: rgba(255, 255, 255, 0.08);
+		--btn-reset-text: #cbd5e1;
+		--card-footer-bg: rgba(11, 15, 25, 0.55);
+		--card-footer-border: rgba(255, 255, 255, 0.07);
+		--badge-bg: rgba(245, 158, 11, 0.12);
+		--badge-border: rgba(245, 158, 11, 0.35);
+		--badge-color: #fbbf24;
+	}
+
+	* {
+		box-sizing: border-box;
+		margin: 0;
+		padding: 0;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	body {
+		font-family: var(--font-body);
+		background-color: var(--page-bg);
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+		color: var(--text-primary);
+		transition: background-color 0.2s ease;
+	}
+
+	/* Top Material Header Bar */
+	.login-header {
+		height: 48px;
+		background-color: var(--theme-primary, #0e7490);
+		box-shadow: 0 2px 5px rgba(0,0,0,0.12);
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: 100;
+		display: flex;
+		align-items: center;
+		padding: 0 1.25rem;
+	}
+
+	.login-header-container {
+		width: 100%;
+		max-width: 1200px;
+		margin: 0 auto;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.login-logo {
+		display: inline-flex;
+		align-items: center;
+		text-decoration: none;
+	}
+
+	.login-logo img {
+		height: 28px;
+		max-width: 160px;
+		display: block;
+		filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
+	}
+
+	.login-host-pill {
+		background: rgba(255, 255, 255, 0.22);
+		color: #ffffff;
+		border: 1px solid rgba(255, 255, 255, 0.35);
+		border-radius: 6px;
+		padding: 3px 10px;
+		font-size: 11px;
+		font-weight: 600;
+		letter-spacing: 0.3px;
+	}
+
+	/* Main Page Area */
+	.login-main {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 80px 1.25rem 30px 1.25rem;
+		background-image: radial-gradient(circle at 50% 12%, rgba(14, 116, 144, 0.1) 0%, transparent 65%);
+	}
+
+	/* The Card Container */
+	.login-card {
+		width: 100%;
+		max-width: 440px;
+		background: var(--card-bg);
+		border-radius: 20px;
+		border: 1px solid var(--card-border);
+		box-shadow: var(--card-shadow);
+		overflow: hidden;
+		position: relative;
+		animation: cardFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+		transition: all 0.2s ease;
+	}
+
+	@keyframes cardFadeIn {
+		from {
+			opacity: 0;
+			transform: translateY(12px) scale(0.98);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0) scale(1);
+		}
+	}
+
+	.top-accent-line {
+		height: 3.5px;
+		width: 100%;
+		background: linear-gradient(90deg, var(--theme-secondary, #38bdf8) 0%, var(--theme-primary, #0e7490) 100%);
+		box-shadow: 0 1px 10px var(--theme-secondary, #38bdf8);
+	}
+
+	.card-body {
+		padding: 30px 32px 26px 32px;
+	}
+
+	.badge-pill {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		background: var(--badge-bg);
+		border: 1px solid var(--badge-border);
+		color: var(--badge-color);
+		font-size: 11px;
+		font-weight: 700;
+		padding: 4px 12px;
+		border-radius: 20px;
+		letter-spacing: 0.3px;
+	}
+
+	.badge-pill svg {
+		width: 12px;
+		height: 12px;
+		fill: currentColor;
+	}
+
+	.card-title {
+		font-size: 24px;
+		font-weight: 700;
+		color: var(--text-primary);
+		margin: 16px 0 6px 0;
+		letter-spacing: -0.4px;
+		line-height: 1.25;
+	}
+
+	.card-subtitle {
+		font-size: 13.5px;
+		color: var(--text-secondary);
+		line-height: 1.5;
+		margin: 0 0 22px 0;
+	}
+
+	.alert-error {
+		background: rgba(239, 68, 68, 0.12);
+		border: 1px solid rgba(239, 68, 68, 0.35);
+		color: #ef4444;
+		padding: 12px 14px;
+		border-radius: 12px;
+		font-size: 12.5px;
+		font-weight: 500;
+		margin-bottom: 20px;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		line-height: 1.4;
+	}
+
+	.alert-error svg {
+		width: 16px;
+		height: 16px;
+		flex-shrink: 0;
+		fill: currentColor;
+	}
+
+	.form-group {
+		margin-bottom: 18px;
+	}
+
+	.form-label {
+		display: block;
+		font-size: 11px;
+		font-weight: 700;
+		color: var(--text-secondary);
+		text-transform: uppercase;
+		letter-spacing: 0.8px;
+		margin-bottom: 8px;
+	}
+
+	.input-wrapper {
+		position: relative;
+		display: flex;
+		align-items: center;
+		background: var(--input-bg);
+		border: 1px solid var(--input-border);
+		border-radius: 12px;
+		transition: all 0.2s ease;
+	}
+
+	.input-wrapper:focus-within {
+		border-color: var(--theme-primary, #0e7490);
+		box-shadow: 0 0 0 3px rgba(14, 116, 144, 0.18);
+	}
+
+	.input-icon-left {
+		position: absolute;
+		left: 14px;
+		color: var(--input-icon);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		pointer-events: none;
+	}
+
+	.input-icon-left svg {
+		width: 17px;
+		height: 17px;
+		stroke: currentColor;
+		fill: none;
+		stroke-width: 2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	.input-icon-right {
+		position: absolute;
+		right: 14px;
+		color: var(--input-icon);
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 26px;
+		height: 26px;
+		border-radius: 6px;
+		transition: color 0.15s ease;
+		user-select: none;
+	}
+
+	.input-icon-right:hover {
+		color: var(--text-primary);
+	}
+
+	.input-icon-right svg {
+		width: 17px;
+		height: 17px;
+		stroke: currentColor;
+		fill: none;
+		stroke-width: 2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	.form-input {
+		width: 100%;
+		height: 48px;
+		background: transparent;
+		border: none;
+		outline: none;
+		padding: 0 46px;
+		color: var(--input-text);
+		font-size: 14.5px;
+		font-weight: 600;
+		font-family: inherit;
+	}
+
+	.form-input::placeholder {
+		color: var(--text-secondary);
+		opacity: 0.6;
+		font-weight: 400;
+	}
+
+	.form-actions {
+		display: flex;
+		gap: 12px;
+		margin-top: 24px;
+	}
+
+	.btn-login {
+		flex: 1;
+		height: 48px;
+		border: none;
+		border-radius: 12px;
+		background: linear-gradient(135deg, var(--theme-secondary, #38bdf8) 0%, var(--theme-primary, #0e7490) 100%);
+		color: #ffffff;
+		font-size: 13.5px;
+		font-weight: 700;
+		letter-spacing: 0.6px;
+		text-transform: uppercase;
+		cursor: pointer;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		box-shadow: 0 6px 18px rgba(14, 116, 144, 0.35);
+		transition: all 0.2s ease;
+	}
+
+	.btn-login:hover {
+		filter: brightness(1.08);
+		transform: translateY(-1px);
+		box-shadow: 0 8px 24px rgba(14, 116, 144, 0.45);
+	}
+
+	.btn-login:active {
+		transform: translateY(1px);
+		box-shadow: 0 3px 10px rgba(14, 116, 144, 0.3);
+	}
+
+	.btn-reset {
+		width: 95px;
+		height: 48px;
+		border: 1px solid var(--btn-reset-border);
+		border-radius: 12px;
+		background: var(--btn-reset-bg);
+		color: var(--btn-reset-text);
+		font-size: 12.5px;
+		font-weight: 700;
+		letter-spacing: 0.6px;
+		text-transform: uppercase;
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	.btn-reset:hover {
+		filter: brightness(0.95);
+	}
+
+	.card-footer {
+		border-top: 1px solid var(--card-footer-border);
+		background: var(--card-footer-bg);
+		padding: 13px 28px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.footer-left {
+		display: flex;
+		align-items: center;
+		gap: 7px;
+		color: var(--text-secondary);
+		font-size: 12px;
+		font-weight: 500;
+	}
+
+	.footer-left svg {
+		width: 14px;
+		height: 14px;
+		stroke: var(--theme-primary, #0e7490);
+		fill: none;
+		stroke-width: 2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	.footer-right {
+		color: var(--text-secondary);
+		font-size: 12px;
+		font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+		font-weight: 600;
+		letter-spacing: 0.5px;
+	}
+
+	/* Bottom Brand Footer */
+	.page-bottom-footer {
+		text-align: center;
+		padding: 16px 1rem;
+		font-size: 12px;
+		color: var(--text-secondary);
+		opacity: 0.85;
+	}
+
+	.page-bottom-footer a {
+		color: var(--theme-primary, #0e7490);
+		text-decoration: none;
+		font-weight: 600;
+	}
+
+	.page-bottom-footer a:hover {
+		text-decoration: underline;
+	}
+
+	.spinner {
+		width: 16px;
+		height: 16px;
+		border: 2px solid rgba(255, 255, 255, 0.3);
+		border-top-color: #ffffff;
+		border-radius: 50%;
+		animation: spin 0.8s linear infinite;
+	}
+	@keyframes spin {
+		to { transform: rotate(360deg); }
+	}
+</style>
+</head>
+<body class="{{ (theme_mode == 'dark') ? 'material-dark-mode' : '' }}">
+
+<!-- Top Material Header Bar -->
+<header class="login-header">
+	<div class="login-header-container">
+		<a href="#" class="login-logo">
+			<img src="{{ media }}/brand.png" alt="OpenWrt" id="header-brand-img">
+		</a>
+		<div class="login-header-info">
+			<span class="login-host-pill">{{ hostname }}</span>
+		</div>
+	</div>
+</header>
+
+<!-- Main Login Canvas -->
+<main class="login-main">
+	<div class="login-card">
+		<div class="top-accent-line"></div>
+		
+		<div class="card-body">
+			<div class="badge-pill">
+				<svg viewBox="0 0 24 24">
+					<path d="M12 2C9.243 2 7 4.243 7 7v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7c0-2.757-2.243-5-5-5zm-3 5c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7zm3 8a1.5 1.5 0 0 1-1.5-1.5c0-.828.672-1.5 1.5-1.5s1.5.672 1.5 1.5c0 .828-.672 1.5-1.5 1.5z"/>
+				</svg>
+				<span>LuCI Web UI</span>
+			</div>
+
+			<h1 class="card-title">{{ _('Authorization Required') }}</h1>
+			<p class="card-subtitle">Silakan masukkan username dan password router Anda.</p>
+
+			{% if (fuser): %}
+			<div class="alert-error">
+				<svg viewBox="0 0 24 24">
+					<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+				</svg>
+				<span>{{ _('Invalid username and/or password! Please try again.') }}</span>
+			</div>
+			{% endif %}
+
+			<form method="post" id="login-form">
+				<div class="form-group">
+					<label class="form-label" for="luci_username">{{ _('Username') }}</label>
+					<div class="input-wrapper">
+						<div class="input-icon-left">
+							<svg viewBox="0 0 24 24">
+								<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+								<circle cx="12" cy="7" r="4"></circle>
+							</svg>
+						</div>
+						<input class="form-input" type="text" name="luci_username" id="luci_username" value="{{ entityencode(duser, true) }}" placeholder="root" autocomplete="username" required>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="form-label" for="luci_password">{{ _('Password') }}</label>
+					<div class="input-wrapper">
+						<div class="input-icon-left">
+							<svg viewBox="0 0 24 24">
+								<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+								<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+							</svg>
+						</div>
+						<input class="form-input" type="password" name="luci_password" id="luci_password" placeholder="••••••••" autocomplete="current-password">
+						<div class="input-icon-right" id="toggle-password" title="Show/Hide Password">
+							<svg id="eye-icon" viewBox="0 0 24 24">
+								<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+								<circle cx="12" cy="12" r="3"></circle>
+							</svg>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-actions">
+					<button type="submit" class="btn-login" id="submit-btn">
+						<span id="btn-text">LOG IN &rarr;</span>
+					</button>
+					<button type="reset" class="btn-reset" id="reset-btn">
+						RESET
+					</button>
+				</div>
+			</form>
+		</div>
+
+		<div class="card-footer">
+			<div class="footer-left">
+				<svg viewBox="0 0 24 24">
+					<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+					<path d="M9 12l2 2 4-4"></path>
+				</svg>
+				<span>Local Gateway Session</span>
+			</div>
+			<div class="footer-right" id="live-clock">
+				--.--.--
+			</div>
+		</div>
+	</div>
+</main>
+
+<footer class="page-bottom-footer">
+	<a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">Powered by LuCI openwrt-24.10</a> / OpenWrt 24.10.7
+</footer>
+
+<script>
+	// 1. Password Visibility Toggle
+	var pwdInput = document.getElementById('luci_password');
+	var toggleBtn = document.getElementById('toggle-password');
+	var eyeIcon = document.getElementById('eye-icon');
+
+	if (toggleBtn && pwdInput) {
+		toggleBtn.addEventListener('click', function() {
+			if (pwdInput.type === 'password') {
+				pwdInput.type = 'text';
+				eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+			} else {
+				pwdInput.type = 'password';
+				eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+			}
+		});
+	}
+
+	// 2. Focus Password Input Automatically
+	if (pwdInput) {
+		pwdInput.focus();
+	}
+
+	// 3. Live Digital Clock in Footer (HH.mm.ss)
+	function updateClock() {
+		var clockEl = document.getElementById('live-clock');
+		if (!clockEl) return;
+		var now = new Date();
+		var hh = String(now.getHours()).padStart(2, '0');
+		var mm = String(now.getMinutes()).padStart(2, '0');
+		var ss = String(now.getSeconds()).padStart(2, '0');
+		clockEl.textContent = hh + '.' + mm + '.' + ss;
+	}
+	updateClock();
+	setInterval(updateClock, 1000);
+
+	// 4. Submit Loading State
+	var form = document.getElementById('login-form');
+	var submitBtn = document.getElementById('submit-btn');
+	var btnText = document.getElementById('btn-text');
+
+	if (form && submitBtn) {
+		form.addEventListener('submit', function() {
+			submitBtn.disabled = true;
+			submitBtn.style.opacity = '0.85';
+			btnText.innerHTML = '<span class="spinner"></span> &nbsp; LOGGING IN...';
+		});
+	}
+
+	// 5. HTTPS probe
+	if (document.location.protocol != 'https:') {
+		{{ https_ports }}.forEach(function(port) {
+			var url = 'https://' + window.location.hostname + ':' + port + window.location.pathname;
+			var img = new Image();
+			img.onload = function() { window.location = url };
+			img.src = 'https://' + window.location.hostname + ':' + port + '{{ resource }}/icons/loading.svg?' + Math.random();
+			setTimeout(function() { img.src = '' }, 5000);
+		});
+	}
+</script>
+
+</body>
+</html>

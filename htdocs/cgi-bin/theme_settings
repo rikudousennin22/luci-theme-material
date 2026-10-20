@@ -1,0 +1,15 @@
+#!/bin/sh
+printf "Content-Type: application/json\r\n\r\n"
+
+CONFIG_FILE="/etc/config/luci_theme_customizer.json"
+
+if [ "$REQUEST_METHOD" = "POST" ]; then
+    cat > "$CONFIG_FILE"
+    printf '{"status":"ok"}\n'
+else
+    if [ -f "$CONFIG_FILE" ]; then
+        cat "$CONFIG_FILE"
+    else
+        printf 'null\n'
+    fi
+fi
